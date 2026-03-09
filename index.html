@@ -68,23 +68,23 @@ Status : <span id="lift1-status">idle</span>
 
 <div class="lift">
 <h3>Lift 2</h3>
-Floor : 7<br>
-People : 2<br>
-Status : <span class="status-idle">Idle</span>
+Floor : <span id="lift2-floor">0</span><br>
+People : <span id="lift2-people">0</span><br>
+Status : <span id="lift2-status">idle</span>
 </div>
 
 <div class="lift">
 <h3>Lift 3</h3>
-Floor : 1<br>
-People : 0<br>
-Status : <span class="status-idle">Idle</span>
+Floor : <span id="lift3-floor">0</span><br>
+People : <span id="lift3-people">0</span><br>
+Status : <span id="lift3-status">idle</span>
 </div>
 
 <div class="lift">
 <h3>Lift 4</h3>
-Floor : 9<br>
-People : 5<br>
-Status : <span class="status-moving">Moving ↓</span>
+Floor : <span id="lift4-floor">0</span><br>
+People : <span id="lift4-people">0</span><br>
+Status : <span id="lift4-status">idle</span>
 </div>
 
 </div>
@@ -109,8 +109,12 @@ async function updateLifts(){
 
 for(let i=1;i<=4;i++){
 
+try{
+
 let response = await fetch(dbURL + "/lift" + i + ".json");
 let data = await response.json();
+
+if(data){
 
 document.getElementById("lift"+i+"-floor").innerText = data.floor;
 document.getElementById("lift"+i+"-people").innerText = data.people;
@@ -118,8 +122,14 @@ document.getElementById("lift"+i+"-status").innerText = data.status;
 
 }
 
+}catch(err){
+console.log("Lift "+i+" data error", err);
 }
-  
+
+}
+
+}
+
 updateLifts();
 setInterval(updateLifts,2000);
 
@@ -128,6 +138,7 @@ setInterval(updateLifts,2000);
 </body>
 
 </html>
+
 
 
 

@@ -26,12 +26,12 @@ gap:80px;
 margin-top:40px;
 }
 
-.shaft{
-width:90px;
-height:500px;
-background:#111827;
-border:3px solid #444;
-position:relative;
+.shaft {
+    width: 90px;
+    height: 550px; 
+    background: #111827;
+    border: 3px solid #444;
+    position: relative;
 }
 
 .elevator{
@@ -46,12 +46,12 @@ transition:bottom 1s;
 transform: translateY(5px);
 }
 
-.floor-labels{
-position:absolute;
-left:-40px;
-bottom:0;
-display:flex;
-flex-direction:column;
+.floor-labels {
+    position: absolute;
+    left: -40px;
+    bottom: 0;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .floor-label{
@@ -271,7 +271,7 @@ document.getElementById("lift"+i+"-status").innerText = data.status;
 }
 
 moveLift(i, data.floor);
-openDoor(i);
+// openDoor(i);
 
 }catch(e){
 
@@ -307,4 +307,5 @@ setInterval(updateLifts,2000);
 
 </body>
 </html>
+
 

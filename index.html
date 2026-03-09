@@ -51,7 +51,7 @@ transform: translateY(5px);
     left: -40px;
     bottom: 0;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column-reverse; 
 }
 
 .floor-label{
@@ -227,85 +227,86 @@ document.getElementById("emergencyScreen").style.display="none";
 </script>
 
 <script>
+const dbURL = "https://lifttracker-86bae-default-rtdb.asia-southeast1.firebasedatabase.app/lifts";
 
-const dbURL="https://lifttracker-86bae-default-rtdb.asia-southeast1.firebasedatabase.app/lifts";
+// 1. Create a "memory" object to store the previous floor of each lift
+const previousFloors = { 1: null, 2: null, 3: null, 4: null };
 
-function moveLift(liftNumber,floor){
-
-let lift=document.getElementById("lift"+liftNumber);
-
-let height = floor * 50;
-
-lift.style.bottom=height+"px";
-
+function moveLift(liftNumber, floor) {
+    let lift = document.getElementById("lift" + liftNumber);
+    let height = floor * 50;
+    lift.style.bottom = height + "px";
 }
 
-async function updateLifts(){
+async function updateLifts() {
+    for (let i = 1; i <= 4; i++) {
+        try {
+            let response = await fetch(dbURL + "/lift" + i + ".json");
+            let data = await response.json();
 
-for(let i=1;i<=4;i++){
+            if (!data) continue;
 
-try{
+            // Update Floor Label
+            if (data.floor == 0) {
+                document.getElementById("lift" + i + "-floor").innerText = "G";
+            } else {
+                document.getElementById("lift" + i + "-floor").innerText = data.floor;
+            }
 
-let response = await fetch(dbURL + "/lift" + i + ".json");
-let data = await response.json();
+            // Update People and Overload Status
+            let people = data.people;
+            let peopleEl = document.getElementById("lift" + i + "-people");
+            peopleEl.innerText = people;
 
-if(!data) continue;
+            if (people > 8) {
+                peopleEl.classList.add("overload");
+                document.getElementById("lift" + i + "-status").innerText = "OVERLOAD";
+            } else {
+                peopleEl.classList.remove("overload");
+                document.getElementById("lift" + i + "-status").innerText = data.status;
+            }
 
-if(data.floor == 0){
-document.getElementById("lift"+i+"-floor").innerText = "G";
-}else{
-document.getElementById("lift"+i+"-floor").innerText = data.floor;
+            // Move the Lift
+            moveLift(i, data.floor);
+
+            // 2. DOOR LOGIC: Check if the floor has changed since the last check
+            if (previousFloors[i] !== null && previousFloors[i] !== data.floor) {
+                openDoor(i); // Only open if it arrived at a new floor!
+            }
+
+            // 3. Update the memory with the new floor for the next cycle
+            previousFloors[i] = data.floor;
+
+        } catch (e) {
+            console.log("Lift error:", e);
+        }
+    }
 }
 
-let people = data.people;
-let peopleEl = document.getElementById("lift"+i+"-people");
+function openDoor(lift) {
+    let door = document.getElementById("door" + lift);
+    door.classList.add("open");
 
-peopleEl.innerText = people;
-
-if(people > 8){
-peopleEl.classList.add("overload");
-document.getElementById("lift"+i+"-status").innerText = "OVERLOAD";
-}else{
-peopleEl.classList.remove("overload");
-document.getElementById("lift"+i+"-status").innerText = data.status;
+    setTimeout(() => {
+        door.classList.remove("open");
+    }, 2000);
 }
 
-moveLift(i, data.floor);
-// openDoor(i);
-
-}catch(e){
-
-console.log("Lift error:", e);
-
+function showEmergency() {
+    document.getElementById("emergencyScreen").style.display = "flex";
 }
 
-}
-
-}
-function openDoor(lift){
-let door=document.getElementById("door"+lift);
-door.classList.add("open");
-
-setTimeout(()=>{
-door.classList.remove("open");
-},2000);
-}
-
-function showEmergency(){
-document.getElementById("emergencyScreen").style.display="flex";
-}
-  
-document.querySelectorAll(".elevator").forEach(e=>{
-e.style.bottom="0px";
+document.querySelectorAll(".elevator").forEach(e => {
+    e.style.bottom = "0px";
 });
-  
+
 updateLifts();
-  
-setInterval(updateLifts,2000);
+setInterval(updateLifts, 2000);
 
 </script>
 
 </body>
 </html>
+
 
 

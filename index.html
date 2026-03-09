@@ -43,6 +43,7 @@ bottom:0;
 left:5px;
 border-radius:5px;
 transition:bottom 1s;
+transform: translateY(5px);
 }
 
 .floor-labels{
@@ -55,8 +56,10 @@ justify-content:space-between;
 }
 
 .floor-label{
-height:40px;
+height:50px;
 font-size:14px;
+display:flex;
+align-items:center;
 }
 
 .info{
@@ -148,17 +151,17 @@ SMART LIFT CONTROL PANEL
 
 <div class="shaft">
 <div class="floor-labels">
-<div class="floor-label floor-g">G</div>
-<div class="floor-label">1</div>
-<div class="floor-label">2</div>
-<div class="floor-label">3</div>
-<div class="floor-label">4</div>
-<div class="floor-label">5</div>
-<div class="floor-label">6</div>
-<div class="floor-label">7</div>
-<div class="floor-label">8</div>
-<div class="floor-label">9</div>
 <div class="floor-label">10</div>
+<div class="floor-label">9</div>
+<div class="floor-label">8</div>
+<div class="floor-label">7</div>
+<div class="floor-label">6</div>
+<div class="floor-label">5</div>
+<div class="floor-label">4</div>
+<div class="floor-label">3</div>
+<div class="floor-label">2</div>
+<div class="floor-label">1</div>
+<div class="floor-label floor-g">G</div>
 </div>
 <div class="elevator" id="lift1"><div class="door" id="door1"></div></div>
 </div>
@@ -293,7 +296,11 @@ door.classList.remove("open");
 function showEmergency(){
 document.getElementById("emergencyScreen").style.display="flex";
 }
-
+  
+document.querySelectorAll(".elevator").forEach(e=>{
+e.style.bottom="0px";
+});
+  
 updateLifts();
   
 setInterval(updateLifts,2000);
@@ -302,6 +309,3 @@ setInterval(updateLifts,2000);
 
 </body>
 </html>
-
-
-

@@ -146,6 +146,31 @@ font-weight:bold;
 font-size:16px;
 }
 
+.indicator{
+position:absolute;
+top:-35px;
+width:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:6px;
+font-weight:bold;
+font-size:16px;
+}
+
+.arrow{
+color:#22c55e;
+font-size:18px;
+}
+
+.floor-display{
+background:black;
+padding:3px 7px;
+border-radius:4px;
+color:#22c55e;
+font-family:monospace;
+}
+
 </style>
 </head>
 
@@ -178,34 +203,63 @@ SMART LIFT CONTROL PANEL
 
 </div>
 
+<div class="shaft">
+
+<div class="indicator" id="indicator1">
+<span class="arrow" id="arrow1">•</span>
+<span class="floor-display" id="display1">G</span>
+</div>
+
 <div class="elevator" id="lift1">
 <div class="door-left" id="door1-left"></div>
 <div class="door-right" id="door1-right"></div>
 </div>
+
 </div>
 
 
 <div class="shaft">
+
+<div class="indicator" id="indicator2">
+<span class="arrow" id="arrow2">•</span>
+<span class="floor-display" id="display2">G</span>
+</div>
+
 <div class="elevator" id="lift2">
 <div class="door-left" id="door2-left"></div>
 <div class="door-right" id="door2-right"></div>
 </div>
+
 </div>
 
 
 <div class="shaft">
+
+<div class="indicator" id="indicator3">
+<span class="arrow" id="arrow3">•</span>
+<span class="floor-display" id="display3">G</span>
+</div>
+
 <div class="elevator" id="lift3">
 <div class="door-left" id="door3-left"></div>
 <div class="door-right" id="door3-right"></div>
 </div>
+
 </div>
 
 
 <div class="shaft">
+
+<div class="indicator" id="indicator4">
+<span class="arrow" id="arrow4">•</span>
+<span class="floor-display" id="display4">G</span>
+</div>
+
 <div class="elevator" id="lift4">
 <div class="door-left" id="door4-left"></div>
 <div class="door-right" id="door4-right"></div>
 </div>
+
 </div>
 
 </div>
@@ -300,6 +354,7 @@ async function updateLifts() {
             }
 
             moveLift(i, data.floor);
+            updateIndicator(i, data.floor);
 
             if (previousFloors[i] !== null && previousFloors[i] !== data.floor) {
                 openDoor(i);
@@ -330,6 +385,37 @@ right.classList.remove("open-right");
 
 }
 
+function updateIndicator(lift, floor){
+
+let arrow = document.getElementById("arrow"+lift);
+let display = document.getElementById("display"+lift);
+
+if(floor == 0){
+display.innerText = "G";
+}else{
+display.innerText = floor;
+}
+
+let prev = previousFloors[lift];
+
+if(prev !== null){
+
+if(floor > prev){
+arrow.innerText = "↑";
+}
+
+else if(floor < prev){
+arrow.innerText = "↓";
+}
+
+else{
+arrow.innerText = "•";
+}
+
+}
+
+}
+
 function showEmergency() {
     document.getElementById("emergencyScreen").style.display = "flex";
 }
@@ -345,6 +431,7 @@ setInterval(updateLifts, 2000);
 
 </body>
 </html>
+
 
 
 

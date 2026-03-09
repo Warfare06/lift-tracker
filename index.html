@@ -55,8 +55,8 @@ transition:bottom 1s;
 }
 
 .floor-label{
-height:45px;
-line-height:45px;
+height:50px;
+line-height:50px;
 font-size:14px;
 }
 
@@ -74,7 +74,7 @@ padding:20px;
 border-radius:10px;
 }
 
-button{
+.button{
 background:red;
 color:white;
 padding:15px;
@@ -85,18 +85,32 @@ margin:20px;
 cursor:pointer;
 }
 
-.door{
+.door-left,
+.door-right{
 position:absolute;
-width:100%;
+width:50%;
 height:100%;
-background:#111;
-left:0;
+background:#22c55e;
 top:0;
-transition:width 0.5s;
+transition:transform 0.6s;
 }
 
-.door.open{
-width:0%;
+.door-left{
+left:0;
+border-right:1px solid #0f172a;
+}
+
+.door-right{
+right:0;
+border-left:1px solid #0f172a;
+}
+
+.open-left{
+transform:translateX(-100%);
+}
+
+.open-right{
+transform:translateX(100%);
 }
 
 .overload{
@@ -149,31 +163,47 @@ SMART LIFT CONTROL PANEL
 
 <div class="shaft">
 <div class="floor-labels">
-<div class="floor-label floor-g">G</div>
-<div class="floor-label">1</div>
-<div class="floor-label">2</div>
-<div class="floor-label">3</div>
-<div class="floor-label">4</div>
-<div class="floor-label">5</div>
-<div class="floor-label">6</div>
-<div class="floor-label">7</div>
-<div class="floor-label">8</div>
-<div class="floor-label">9</div>
 <div class="floor-label">10</div>
-</div>
-<div class="elevator" id="lift1"><div class="door" id="door1"></div></div>
+<div class="floor-label">9</div>
+<div class="floor-label">8</div>
+<div class="floor-label">7</div>
+<div class="floor-label">6</div>
+<div class="floor-label">5</div>
+<div class="floor-label">4</div>
+<div class="floor-label">3</div>
+<div class="floor-label">2</div>
+<div class="floor-label">1</div>
+<div class="floor-label floor-g">G</div>
 </div>
 
-<div class="shaft">
-<div class="elevator" id="lift2"><div class="door" id="door2"></div></div>
+<div class="elevator" id="lift1">
+<div class="door-left" id="door1-left"></div>
+<div class="door-right" id="door1-right"></div>
+</div>
 </div>
 
-<div class="shaft">
-<div class="elevator" id="lift3"><div class="door" id="door3"></div></div>
-</div>
 
 <div class="shaft">
-<div class="elevator" id="lift4"><div class="door" id="door4"></div></div>
+<div class="elevator" id="lift2">
+<div class="door-left" id="door2-left"></div>
+<div class="door-right" id="door2-right"></div>
+</div>
+</div>
+
+
+<div class="shaft">
+<div class="elevator" id="lift3">
+<div class="door-left" id="door3-left"></div>
+<div class="door-right" id="door3-right"></div>
+</div>
+</div>
+
+
+<div class="shaft">
+<div class="elevator" id="lift4">
+<div class="door-left" id="door4-left"></div>
+<div class="door-right" id="door4-right"></div>
+</div>
 </div>
 
 </div>
@@ -232,9 +262,13 @@ const dbURL = "https://lifttracker-86bae-default-rtdb.asia-southeast1.firebaseda
 const previousFloors = { 1: null, 2: null, 3: null, 4: null };
 
 function moveLift(liftNumber, floor) {
-    let lift = document.getElementById("lift" + liftNumber);
-    let height = floor * 45;
-    lift.style.bottom = height + "px";
+
+let lift = document.getElementById("lift" + liftNumber);
+
+let height = (floor * 50) + 5;
+
+lift.style.bottom = height + "px";
+
 }
 
 async function updateLifts() {
@@ -245,7 +279,6 @@ async function updateLifts() {
 
             if (!data) continue;
 
-            // Update Floor Label
             if (data.floor == 0) {
                 document.getElementById("lift" + i + "-floor").innerText = "G";
             } else {
@@ -278,13 +311,21 @@ async function updateLifts() {
     }
 }
 
-function openDoor(lift) {
-    let door = document.getElementById("door" + lift);
-    door.classList.add("open");
+function openDoor(lift){
 
-    setTimeout(() => {
-        door.classList.remove("open");
-    }, 2000);
+let left=document.getElementById("door"+lift+"-left");
+let right=document.getElementById("door"+lift+"-right");
+
+left.classList.add("open-left");
+right.classList.add("open-right");
+
+setTimeout(()=>{
+
+left.classList.remove("open-left");
+right.classList.remove("open-right");
+
+},2000);
+
 }
 
 function showEmergency() {
@@ -302,6 +343,7 @@ setInterval(updateLifts, 2000);
 
 </body>
 </html>
+
 
 
 

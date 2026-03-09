@@ -49,17 +49,15 @@ transform: translateY(5px);
 .floor-labels{
 position:absolute;
 left:-40px;
-height:100%;
+bottom:0;
 display:flex;
-flex-direction:column-reverse;
-justify-content:space-between;
+flex-direction:column;
 }
 
 .floor-label{
 height:50px;
+line-height:50px;
 font-size:14px;
-display:flex;
-align-items:center;
 }
 
 .info{
@@ -151,17 +149,17 @@ SMART LIFT CONTROL PANEL
 
 <div class="shaft">
 <div class="floor-labels">
-<div class="floor-label">10</div>
-<div class="floor-label">9</div>
-<div class="floor-label">8</div>
-<div class="floor-label">7</div>
-<div class="floor-label">6</div>
-<div class="floor-label">5</div>
-<div class="floor-label">4</div>
-<div class="floor-label">3</div>
-<div class="floor-label">2</div>
-<div class="floor-label">1</div>
 <div class="floor-label floor-g">G</div>
+<div class="floor-label">1</div>
+<div class="floor-label">2</div>
+<div class="floor-label">3</div>
+<div class="floor-label">4</div>
+<div class="floor-label">5</div>
+<div class="floor-label">6</div>
+<div class="floor-label">7</div>
+<div class="floor-label">8</div>
+<div class="floor-label">9</div>
+<div class="floor-label">10</div>
 </div>
 <div class="elevator" id="lift1"><div class="door" id="door1"></div></div>
 </div>
@@ -309,3 +307,4 @@ setInterval(updateLifts,2000);
 
 </body>
 </html>
+

@@ -43,7 +43,7 @@ bottom:0;
 left:5px;
 border-radius:5px;
 transition:bottom 1s;
-transform: translateY(5px);
+/* transform: translateY(5px); */
 }
 
 .floor-labels {
@@ -55,8 +55,8 @@ transform: translateY(5px);
 }
 
 .floor-label{
-height:50px;
-line-height:50px;
+height:45px;
+line-height:45px;
 font-size:14px;
 }
 
@@ -229,12 +229,11 @@ document.getElementById("emergencyScreen").style.display="none";
 <script>
 const dbURL = "https://lifttracker-86bae-default-rtdb.asia-southeast1.firebasedatabase.app/lifts";
 
-// 1. Create a "memory" object to store the previous floor of each lift
 const previousFloors = { 1: null, 2: null, 3: null, 4: null };
 
 function moveLift(liftNumber, floor) {
     let lift = document.getElementById("lift" + liftNumber);
-    let height = floor * 50;
+    let height = floor * 45;
     lift.style.bottom = height + "px";
 }
 
@@ -253,7 +252,6 @@ async function updateLifts() {
                 document.getElementById("lift" + i + "-floor").innerText = data.floor;
             }
 
-            // Update People and Overload Status
             let people = data.people;
             let peopleEl = document.getElementById("lift" + i + "-people");
             peopleEl.innerText = people;
@@ -266,15 +264,12 @@ async function updateLifts() {
                 document.getElementById("lift" + i + "-status").innerText = data.status;
             }
 
-            // Move the Lift
             moveLift(i, data.floor);
 
-            // 2. DOOR LOGIC: Check if the floor has changed since the last check
             if (previousFloors[i] !== null && previousFloors[i] !== data.floor) {
-                openDoor(i); // Only open if it arrived at a new floor!
+                openDoor(i);
             }
 
-            // 3. Update the memory with the new floor for the next cycle
             previousFloors[i] = data.floor;
 
         } catch (e) {
@@ -307,6 +302,7 @@ setInterval(updateLifts, 2000);
 
 </body>
 </html>
+
 
 
 

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Smart Lift Monitor</title>
+<title>Smart Lift Control Panel</title>
 
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 background:#0f172a;
 color:white;
 text-align:center;
@@ -19,23 +19,59 @@ font-size:28px;
 font-weight:bold;
 }
 
-.container{
+.building{
+display:flex;
+justify-content:center;
+gap:80px;
+margin-top:40px;
+}
+
+.shaft{
+width:90px;
+height:500px;
+background:#111827;
+border:3px solid #444;
+position:relative;
+}
+
+.elevator{
+width:80px;
+height:40px;
+background:#22c55e;
+position:absolute;
+bottom:0;
+left:5px;
+border-radius:5px;
+transition:bottom 1s;
+}
+
+.floor-labels{
+position:absolute;
+left:-40px;
+height:100%;
+display:flex;
+flex-direction:column-reverse;
+justify-content:space-between;
+}
+
+.floor-label{
+height:40px;
+font-size:14px;
+}
+
+.info{
+margin-top:40px;
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:repeat(4,1fr);
 gap:20px;
 padding:20px;
 }
 
-.lift{
+.lift-card{
 background:#1f2937;
 padding:20px;
 border-radius:10px;
-font-size:18px;
 }
-
-.status-moving{color:yellow;}
-.status-idle{color:lime;}
-.status-emergency{color:red;}
 
 button{
 background:red;
@@ -48,41 +84,118 @@ margin:20px;
 cursor:pointer;
 }
 
+.door{
+position:absolute;
+width:100%;
+height:100%;
+background:#111;
+left:0;
+top:0;
+transition:width 0.5s;
+}
+
+.door.open{
+width:0%;
+}
+
+.overload{
+color:red;
+font-weight:bold;
+}
+
+.emergency-screen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:red;
+color:white;
+font-size:40px;
+display:none;
+align-items:center;
+justify-content:center;
+z-index:999;
+animation:blink 1s infinite;
+}
+
+@keyframes blink{
+0%{opacity:1;}
+50%{opacity:0.3;}
+100%{opacity:1;}
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="header">
-SMART LIFT MONITOR
+<div id="emergencyScreen" class="emergency-screen" onclick="closeEmergency()">
+🚨 EMERGENCY ALERT 🚨
 </div>
 
-<div class="container" id="lifts">
+<div class="header">
+SMART LIFT CONTROL PANEL
+</div>
 
-<div class="lift">
+<div class="building">
+
+<div class="shaft">
+<div class="floor-labels">
+<div class="floor-label">10</div>
+<div class="floor-label">9</div>
+<div class="floor-label">8</div>
+<div class="floor-label">7</div>
+<div class="floor-label">6</div>
+<div class="floor-label">5</div>
+<div class="floor-label">4</div>
+<div class="floor-label">3</div>
+<div class="floor-label">2</div>
+<div class="floor-label">1</div>
+</div>
+<div class="elevator" id="lift1"><div class="door" id="door1"></div></div>
+</div>
+
+<div class="shaft">
+<div class="elevator" id="lift2"><div class="door" id="door2"></div></div>
+</div>
+
+<div class="shaft">
+<div class="elevator" id="lift3"><div class="door" id="door3"></div></div>
+</div>
+
+<div class="shaft">
+<div class="elevator" id="lift4"><div class="door" id="door4"></div></div>
+</div>
+
+</div>
+
+<div class="info">
+
+<div class="lift-card">
 <h3>Lift 1</h3>
 Floor : <span id="lift1-floor">1</span><br>
 People : <span id="lift1-people">0</span><br>
 Status : <span id="lift1-status">idle</span>
 </div>
 
-<div class="lift">
+<div class="lift-card">
 <h3>Lift 2</h3>
-Floor : <span id="lift2-floor">0</span><br>
+Floor : <span id="lift2-floor">1</span><br>
 People : <span id="lift2-people">0</span><br>
 Status : <span id="lift2-status">idle</span>
 </div>
 
-<div class="lift">
+<div class="lift-card">
 <h3>Lift 3</h3>
-Floor : <span id="lift3-floor">0</span><br>
+Floor : <span id="lift3-floor">1</span><br>
 People : <span id="lift3-people">0</span><br>
 Status : <span id="lift3-status">idle</span>
 </div>
 
-<div class="lift">
+<div class="lift-card">
 <h3>Lift 4</h3>
-Floor : <span id="lift4-floor">0</span><br>
+Floor : <span id="lift4-floor">1</span><br>
 People : <span id="lift4-people">0</span><br>
 Status : <span id="lift4-status">idle</span>
 </div>
@@ -96,14 +209,28 @@ Status : <span id="lift4-status">idle</span>
 <script>
 
 function emergency(){
-alert("Emergency Alert Sent to All Users!");
+document.getElementById("emergencyScreen").style.display="flex";
+}
+
+function closeEmergency(){
+document.getElementById("emergencyScreen").style.display="none";
 }
 
 </script>
-  
+
 <script>
 
-const dbURL = "https://lifttracker-86bae-default-rtdb.asia-southeast1.firebasedatabase.app/lifts";
+const dbURL="https://lifttracker-86bae-default-rtdb.asia-southeast1.firebasedatabase.app/lifts";
+
+function moveLift(liftNumber,floor){
+
+let lift=document.getElementById("lift"+liftNumber);
+
+let height=(floor-1)*50;
+
+lift.style.bottom=height+"px";
+
+}
 
 async function updateLifts(){
 
@@ -114,31 +241,53 @@ try{
 let response = await fetch(dbURL + "/lift" + i + ".json");
 let data = await response.json();
 
-if(data){
+if(!data) continue;
 
 document.getElementById("lift"+i+"-floor").innerText = data.floor;
-document.getElementById("lift"+i+"-people").innerText = data.people;
+
+let people = data.people;
+let peopleEl = document.getElementById("lift"+i+"-people");
+
+peopleEl.innerText = people;
+
+if(people > 8){
+peopleEl.classList.add("overload");
+document.getElementById("lift"+i+"-status").innerText = "OVERLOAD";
+}else{
+peopleEl.classList.remove("overload");
 document.getElementById("lift"+i+"-status").innerText = data.status;
+}
+
+moveLift(i, data.floor);
+openDoor(i);
+
+}catch(e){
+
+console.log("Lift error:", e);
 
 }
 
-}catch(err){
-console.log("Lift "+i+" data error", err);
 }
 
 }
+function openDoor(lift){
+let door=document.getElementById("door"+lift);
+door.classList.add("open");
 
+setTimeout(()=>{
+door.classList.remove("open");
+},2000);
+}
+
+function showEmergency(){
+document.getElementById("emergencyScreen").style.display="flex";
 }
 
 updateLifts();
+  
 setInterval(updateLifts,2000);
 
 </script>
 
 </body>
-
 </html>
-
-
-
-

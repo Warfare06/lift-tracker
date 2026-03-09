@@ -19,9 +19,6 @@ font-size:28px;
 font-weight:bold;
 }
 
-<button onclick="toggleTheme()" class="theme-btn">
-🌗 Toggle Theme
-</button>
 
 .building{
 display:flex;
@@ -459,10 +456,6 @@ function showEmergency() {
 document.querySelectorAll(".elevator").forEach(e => {
     e.style.bottom = "0px";
 });
-
-function toggleTheme(){
-document.body.classList.toggle("light-theme");
-}
     
 updateLifts();
 setInterval(updateLifts, 2000);
@@ -471,3 +464,4 @@ setInterval(updateLifts, 2000);
 
 </body>
 </html>
+

@@ -19,6 +19,10 @@ font-size:28px;
 font-weight:bold;
 }
 
+<button onclick="toggleTheme()" class="theme-btn">
+🌗 Toggle Theme
+</button>
+
 .building{
 display:flex;
 justify-content:center;
@@ -169,6 +173,35 @@ padding:3px 7px;
 border-radius:4px;
 color:#22c55e;
 font-family:monospace;
+}
+
+.theme-btn{
+position:absolute;
+top:20px;
+right:20px;
+padding:8px 14px;
+background:#22c55e;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.light-theme{
+background:#f1f5f9;
+color:black;
+}
+
+.light-theme .shaft{
+background:#e5e7eb;
+}
+
+.light-theme .lift-card{
+background:#e2e8f0;
+}
+
+.light-theme .floor-display{
+background:white;
+color:black;
 }
 
 </style>
@@ -427,6 +460,10 @@ document.querySelectorAll(".elevator").forEach(e => {
     e.style.bottom = "0px";
 });
 
+function toggleTheme(){
+document.body.classList.toggle("light-theme");
+}
+    
 updateLifts();
 setInterval(updateLifts, 2000);
 
@@ -434,4 +471,3 @@ setInterval(updateLifts, 2000);
 
 </body>
 </html>
-

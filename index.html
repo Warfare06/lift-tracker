@@ -61,9 +61,9 @@ SMART LIFT MONITOR
 
 <div class="lift">
 <h3>Lift 1</h3>
-Floor : 3<br>
-People : 4<br>
-Status : <span class="status-moving">Moving ↑</span>
+Floor : <span id="lift1-floor">1</span><br>
+People : <span id="lift1-people">0</span><br>
+Status : <span id="lift1-status">idle</span>
 </div>
 
 <div class="lift">
@@ -100,6 +100,26 @@ alert("Emergency Alert Sent to All Users!");
 }
 
 </script>
+  
+<script>
+
+const dbURL = "https://lifttracker-86bae-default-rtdb.asia-southeast1.firebasedatabase.app/lifts";
+
+async function updateLiftData() {
+
+let response = await fetch(dbURL + "/lift1.json");
+let data = await response.json();
+
+document.getElementById("lift1-floor").innerText = data.floor;
+document.getElementById("lift1-people").innerText = data.people;
+document.getElementById("lift1-status").innerText = data.status;
+
+}
+
+setInterval(updateLiftData, 2000);
+
+</script>
 
 </body>
+
 </html>

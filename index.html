@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Lift Monitor</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+}
+
+.header{
+background:#1e3a8a;
+padding:20px;
+font-size:28px;
+font-weight:bold;
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+padding:20px;
+}
+
+.lift{
+background:#1f2937;
+padding:20px;
+border-radius:10px;
+font-size:18px;
+}
+
+.status-moving{color:yellow;}
+.status-idle{color:lime;}
+.status-emergency{color:red;}
+
+button{
+background:red;
+color:white;
+padding:15px;
+font-size:18px;
+border:none;
+border-radius:8px;
+margin:20px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+SMART LIFT MONITOR
+</div>
+
+<div class="container" id="lifts">
+
+<div class="lift">
+<h3>Lift 1</h3>
+Floor : 3<br>
+People : 4<br>
+Status : <span class="status-moving">Moving ↑</span>
+</div>
+
+<div class="lift">
+<h3>Lift 2</h3>
+Floor : 7<br>
+People : 2<br>
+Status : <span class="status-idle">Idle</span>
+</div>
+
+<div class="lift">
+<h3>Lift 3</h3>
+Floor : 1<br>
+People : 0<br>
+Status : <span class="status-idle">Idle</span>
+</div>
+
+<div class="lift">
+<h3>Lift 4</h3>
+Floor : 9<br>
+People : 5<br>
+Status : <span class="status-moving">Moving ↓</span>
+</div>
+
+</div>
+
+<button onclick="emergency()">
+🚨 EMERGENCY ALERT
+</button>
+
+<script>
+
+function emergency(){
+alert("Emergency Alert Sent to All Users!");
+}
+
+</script>
+
+</body>
+</html>

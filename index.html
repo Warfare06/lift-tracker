@@ -339,10 +339,18 @@ function emergency(){
 document.getElementById("emergencyScreen").style.display="flex";
 }
 
-function closeEmergency(){
+async function closeEmergency(){
+
 document.getElementById("emergencyScreen").style.display="none";
+
+for(let i=1;i<=4;i++){
+await fetch(dbURL+"/lift"+i+"/emergency.json",{
+method:"PUT",
+body:"false"
+});
 }
 
+}
 </script>
 
 <script>
@@ -360,47 +368,61 @@ lift.style.bottom = height + "px";
 
 }
 
+let emergencyActive = false;
+
 async function updateLifts() {
-    for (let i = 1; i <= 4; i++) {
-        try {
-            let response = await fetch(dbURL + "/lift" + i + ".json");
-            let data = await response.json();
 
-            if (!data) continue;
+emergencyActive = false;
 
-            if (data.floor == 0) {
-                document.getElementById("lift" + i + "-floor").innerText = "G";
-            } else {
-                document.getElementById("lift" + i + "-floor").innerText = data.floor;
-            }
+for (let i = 1; i <= 4; i++) {
+    try {
 
-            let people = data.people;
-            let peopleEl = document.getElementById("lift" + i + "-people");
-            peopleEl.innerText = people;
+        let response = await fetch(dbURL + "/lift" + i + ".json");
+        let data = await response.json();
 
-            if (people > 8) {
-                peopleEl.classList.add("overload");
-                document.getElementById("lift" + i + "-status").innerText = "OVERLOAD";
-            } else {
-                peopleEl.classList.remove("overload");
-                document.getElementById("lift" + i + "-status").innerText = data.status;
-            }
+        if (!data) continue;
 
-            moveLift(i, data.floor);
-            updateIndicator(i, data.floor);
-
-            if (previousFloors[i] !== null && previousFloors[i] !== data.floor) {
-                openDoor(i);
-            }
-
-            previousFloors[i] = data.floor;
-
-        } catch (e) {
-            console.log("Lift error:", e);
+        if(data.emergency === true){
+            showEmergency(i);
+            emergencyActive = true;
         }
+
+        if (data.floor == 0) {
+            document.getElementById("lift" + i + "-floor").innerText = "G";
+        } else {
+            document.getElementById("lift" + i + "-floor").innerText = data.floor;
+        }
+
+        let people = data.people;
+        let peopleEl = document.getElementById("lift" + i + "-people");
+        peopleEl.innerText = people;
+
+        if (people > 8) {
+            peopleEl.classList.add("overload");
+            document.getElementById("lift" + i + "-status").innerText = "OVERLOAD";
+        } else {
+            peopleEl.classList.remove("overload");
+            document.getElementById("lift" + i + "-status").innerText = data.status;
+        }
+
+        moveLift(i, data.floor);
+        updateIndicator(i, data.floor);
+
+        if (previousFloors[i] !== null && previousFloors[i] !== data.floor) {
+            openDoor(i);
+        }
+
+        previousFloors[i] = data.floor;
+
+    } catch (e) {
+        console.log("Lift error:", e);
     }
 }
 
+if(!emergencyActive){
+    document.getElementById("emergencyScreen").style.display="none";
+}
+} 
 function openDoor(lift){
 
 let left=document.getElementById("door"+lift+"-left");
@@ -449,8 +471,13 @@ arrow.innerText = "•";
 
 }
 
-function showEmergency() {
-    document.getElementById("emergencyScreen").style.display = "flex";
+function showEmergency(liftNumber){
+
+document.getElementById("emergencyScreen").innerText =
+"🚨 EMERGENCY IN LIFT " + liftNumber + " 🚨";
+
+document.getElementById("emergencyScreen").style.display="flex";
+
 }
 
 document.querySelectorAll(".elevator").forEach(e => {
@@ -464,4 +491,5 @@ setInterval(updateLifts, 2000);
 
 </body>
 </html>
+
 

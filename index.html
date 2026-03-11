@@ -304,6 +304,7 @@ SMART LIFT CONTROL PANEL
 Floor : <span id="lift1-floor">1</span><br>
 People : <span id="lift1-people">0</span><br>
 Status : <span id="lift1-status">idle</span>
+Emergency : <span id="lift1-emergency">NO</span>
 </div>
 
 <div class="lift-card">
@@ -311,6 +312,7 @@ Status : <span id="lift1-status">idle</span>
 Floor : <span id="lift2-floor">1</span><br>
 People : <span id="lift2-people">0</span><br>
 Status : <span id="lift2-status">idle</span>
+Emergency : <span id="lift2-emergency">NO</span>
 </div>
 
 <div class="lift-card">
@@ -318,6 +320,7 @@ Status : <span id="lift2-status">idle</span>
 Floor : <span id="lift3-floor">1</span><br>
 People : <span id="lift3-people">0</span><br>
 Status : <span id="lift3-status">idle</span>
+Emergency : <span id="lift3-emergency">NO</span>
 </div>
 
 <div class="lift-card">
@@ -325,6 +328,7 @@ Status : <span id="lift3-status">idle</span>
 Floor : <span id="lift4-floor">1</span><br>
 People : <span id="lift4-people">0</span><br>
 Status : <span id="lift4-status">idle</span>
+Emergency : <span id="lift4-emergency">NO</span>
 </div>
 
 </div>
@@ -403,6 +407,16 @@ for (let i = 1; i <= 4; i++) {
         } else {
             peopleEl.classList.remove("overload");
             document.getElementById("lift" + i + "-status").innerText = data.status;
+        }
+
+        let emergencyEl = document.getElementById("lift" + i + "-emergency");
+
+        if(data.emergency === true){
+            emergencyEl.innerText = "YES";
+            emergencyEl.style.color = "red";
+        }else{
+            emergencyEl.innerText = "NO";
+            emergencyEl.style.color = "lightgreen";
         }
 
         moveLift(i, data.floor);
@@ -491,5 +505,6 @@ setInterval(updateLifts, 2000);
 
 </body>
 </html>
+
 
 

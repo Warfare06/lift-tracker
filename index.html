@@ -23,6 +23,10 @@ font-weight:bold;
 font-weight:bold;
 }
 
+.maintenance{
+background:gray !important;
+}
+
 .building{
 display:flex;
 justify-content:center;
@@ -46,7 +50,8 @@ position:absolute;
 bottom:0;
 left:5px;
 border-radius:5px;
-transition:bottom 1s;
+transition: bottom 2s ease-in-out;
+/* transition:bottom 1s; */
 /* transform: translateY(5px); */
 }
 
@@ -394,6 +399,10 @@ for (let i = 1; i <= 4; i++) {
             emergencyActive = true;
         }
 
+        if(data.status === "Maintenance"){
+            document.getElementById("lift"+i).classList.add("maintenance");
+        }
+
         if (data.floor == 0) {
             document.getElementById("lift" + i + "-floor").innerText = "G";
         } else {
@@ -508,6 +517,7 @@ setInterval(updateLifts, 2000);
 
 </body>
 </html>
+
 
 
 
